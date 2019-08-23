@@ -1,0 +1,16 @@
+{
+  "name": "tcp_http",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "tsc ./src/index.ts -p ./bin"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "http-headers": "^3.0.2",
+    "stream-http-header-parser": "0.0.2"
+  }
+}
