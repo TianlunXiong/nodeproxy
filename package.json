@@ -5,11 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "tsc ./src/index.ts -p ./bin"
+    "compile": "tsc ./src/index.ts -p ./bin",
+    "local": "node ./bin/local",
+    "remote": "node ./bin/remote"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "config": "^3.2.2",
     "http-headers": "^3.0.2",
     "stream-http-header-parser": "0.0.2"
   }
