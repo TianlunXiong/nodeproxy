@@ -4,7 +4,7 @@
     "port" : 9001
   },
   "remoteConfig" : {
-    "host" : "127.0.0.1",
+    "host" : "换成墙外服务器VPS的IP地址，记得打开VPS的防火墙",
     "port" : 9002
   }
 }
