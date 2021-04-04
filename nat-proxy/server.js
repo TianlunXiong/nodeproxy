@@ -1,12 +1,14 @@
 const net = require('net')
 const config = require('./config.json')
 
-const public_port = config.server.public_port;
-const local_port = config.server.local_port;
+const public_port = config.server.public_port
+const local_port = config.server.local_port
 
-let local_socket = new net.Socket();
+let local_socket;
 
-const public_server = net.createServer((public_socket) => {
+const public_server = net.createServer()
+
+public_server.on('connection', (public_socket) => {
     if (local_socket) {
         public_socket.pipe(local_socket)
         local_socket.pipe(public_socket)
@@ -24,7 +26,7 @@ const local_server = net.createServer((socket) => {
 })
 
 local_server.on('connection', (s) => {
-    local_socket = s;
+    local_socket = s
     console.log(`客户端已接入: ${s.remoteAddress}:${s.remotePort}`)
 })
 

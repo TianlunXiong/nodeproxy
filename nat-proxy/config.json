@@ -2,7 +2,7 @@
     "server": {
         "public_port": 8081,
         "local_port": 3000,
-        "host": "0.0.0.0"
+        "host": "128.1.32.105"
     },
     "client": {
         "working_port": 8080
