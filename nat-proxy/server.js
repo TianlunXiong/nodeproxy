@@ -10,8 +10,12 @@ const public_server = net.createServer()
 
 public_server.on('connection', (public_socket) => {
     if (local_socket) {
-        public_socket.pipe(local_socket)
-        local_socket.pipe(public_socket)
+        try {
+            public_socket.pipe(local_socket)
+            local_socket.pipe(public_socket)
+        } catch (e) {
+            console.error(e)
+        }
     } else {
         console.error('未能连接客户端')
     }
