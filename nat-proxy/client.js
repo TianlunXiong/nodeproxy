@@ -15,17 +15,24 @@ controller_socket.on('connect', () => {
 })
 
 controller_socket.on('data', (d) => {
+    const sp = d.toString().split('/n')
+    sp.forEach((item) => {
+        if (item) bridge(item)
+    })
+})
+
+function bridge(msg) {
+    if (!msg) return
     const data_socket = net.createConnection(data_port, remote_host, () => {
         console.log('数据通道已连接...')
     })
-    const obj = JSON.parse(d.toString());
-    data_socket.write(JSON.stringify(obj))
+    data_socket.write(msg)
     const working_socket = net.createConnection(working_port, '0.0.0.0', () => {
         console.log('正在连接应用服务器...')
     })
     data_socket.pipe(working_socket)
     working_socket.pipe(data_socket)
-})
+}
 
 
 

@@ -1,7 +1,7 @@
 {
     "server": {
         "public_port": 80,
-        "host": "0.0.0.0",
+        "host": "128.1.32.105",
         "data_port": 8081
     },
     "client": {

@@ -13,7 +13,6 @@ let controller_socket = new net.Socket()
 const public_server = net.createServer()
 
 
-
 public_server.on('connection', (public_socket) => {
     const session_key = Math.random().toFixed(20);
     const msg_obj = {
@@ -21,8 +20,8 @@ public_server.on('connection', (public_socket) => {
         key: session_key,
     }
     publicSocketMap[session_key] = public_socket;
-    const msg_ok = controller_socket.write(JSON.stringify(msg_obj));
-    if (msg_ok) console.log('反弹信号已发送')
+    controller_socket.write(JSON.stringify(msg_obj) + '\n');
+    console.log('反弹信号已发送')
     
     public_socket.on('end', () => {
         console.log('外部连接发送FIN')
