@@ -5,8 +5,8 @@ const public_port = config.server.public_port
 const local_port = config.client.local_port
 const data_port = config.server.data_port
 
-const publicSocketMap = new Map();
-const dataSocketMap = new Map();
+const publicSocketMap = {};
+const dataSocketMap = {};
 
 let controller_socket = new net.Socket()
 
@@ -15,18 +15,35 @@ const public_server = net.createServer()
 
 
 public_server.on('connection', (public_socket) => {
-    const n = Math.random().toFixed(20);
-    controller_socket.write(n);
-    publicSocketMap.set(n, public_socket);
+    const session_key = Math.random().toFixed(20);
+    const msg_obj = {
+        type: 'add',
+        key: session_key,
+    }
+    publicSocketMap[session_key] = public_socket;
+    const msg_ok = controller_socket.write(JSON.stringify(msg_obj));
+    if (msg_ok) console.log('反弹信号已发送')
+    
+    public_socket.on('end', () => {
+        console.log('外部连接发送FIN')
+        delete publicSocketMap[session_key]
+        if (dataSocketMap[session_key]) {
+            dataSocketMap.end();
+            public_socket.end();
+        }
+    })
     public_socket.on('close', () => {
-        publicSocketMap.delete(n)
         console.log('外部连接已关闭')
     })
 })
 
 setInterval(() => {
+    const t = new Date().toLocaleString()
     public_server.getConnections((err, count) => {
-        console.log(`${new Date().toLocaleString()} 连接数: ${count}`)
+        console.log(`\n[${t}] 公网连接数: ${count}`)
+    })
+    data_server.getConnections((err, count) => {
+        console.log(`[${t}] 数据连接数: ${count}`)
     })
 }, 2000)
 
@@ -41,7 +58,6 @@ controller_server.on('connection', (socket) => {
     console.log(`控制通道已接入: ${socket.remoteAddress}:${socket.remotePort}`)
 })
 
-
 controller_server.listen(local_port, '0.0.0.0', () => {
     console.log(`控制通道已开启，端口:${local_port}`)
 })
@@ -50,9 +66,16 @@ const data_server = net.createServer()
 
 data_server.on('connection', (data_socket) => {
     console.log(`数据通道已接入: ${data_socket.remoteAddress}:${data_socket.remotePort}`)
-    data_socket.on('data', (d) => {
-        const pub_socket = publicSocketMap.get(`${d}`)
+    data_socket.once('data', (d) => {
+        const obj = JSON.parse(d.toString() || {})
+        const pub_socket = publicSocketMap[obj.key]
         if (pub_socket) {
+            pub_socket.on('error', (e) => {
+                console.error(e)
+            })
+            data_socket.on('error', (e) => {
+                console.error(e)
+            })
             pub_socket.pipe(data_socket)
             data_socket.pipe(pub_socket)
         }
