@@ -65,7 +65,7 @@ const data_server = net.createServer()
 
 data_server.on('connection', (data_socket) => {
     console.log(`数据通道已接入: ${data_socket.remoteAddress}:${data_socket.remotePort}`)
-    data_socket.once('data', (d) => {
+    data_socket.on('data', (d) => {
         const sp = d.toString().split('/n')
         sp.forEach((item) => {
             if (item) bridge(item, data_socket)
@@ -74,17 +74,21 @@ data_server.on('connection', (data_socket) => {
 })
 
 function bridge(jsonStr, data_socket) {
-    const obj = JSON.parse(jsonStr)
-    const pub_socket = publicSocketMap[obj.key]
-    if (pub_socket) {
-        pub_socket.on('error', (e) => {
-            console.error(e)
-        })
-        data_socket.on('error', (e) => {
-            console.error(e)
-        })
-        pub_socket.pipe(data_socket)
-        data_socket.pipe(pub_socket)
+    try {
+        const obj = JSON.parse(jsonStr)
+        const pub_socket = publicSocketMap[obj.key]
+        if (pub_socket) {
+            pub_socket.on('error', (e) => {
+                console.error(e)
+            })
+            data_socket.on('error', (e) => {
+                console.error(e)
+            })
+            pub_socket.pipe(data_socket)
+            data_socket.pipe(pub_socket)
+        }
+    } catch (e) {
+        console.error(e)
     }
 }
 
