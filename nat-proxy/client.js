@@ -26,7 +26,7 @@ function bridge(msg) {
     const data_socket = net.createConnection(data_port, remote_host, () => {
         console.log('数据通道已连接...')
     })
-    data_socket.write(msg)
+    data_socket.write(msg + '/n')
     const working_socket = net.createConnection(working_port, '0.0.0.0', () => {
         console.log('正在连接应用服务器...')
     })
