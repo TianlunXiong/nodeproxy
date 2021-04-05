@@ -66,7 +66,7 @@ const data_server = net.createServer()
 data_server.on('connection', (data_socket) => {
     console.log(`数据通道已接入: ${data_socket.remoteAddress}:${data_socket.remotePort}`)
     data_socket.on('data', (d) => {
-        const sp = d.toString().split('/n')
+        const sp = d.toString().split('\n')
         sp.forEach((item) => {
             if (item) bridge(item, data_socket)
         })
