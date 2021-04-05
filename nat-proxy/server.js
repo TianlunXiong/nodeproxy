@@ -12,11 +12,23 @@ let controller_socket = new net.Socket()
 
 const public_server = net.createServer()
 
+
+
 public_server.on('connection', (public_socket) => {
     const n = Math.random().toFixed(20);
     controller_socket.write(n);
     publicSocketMap.set(n, public_socket);
+    public_socket.on('close', () => {
+        publicSocketMap.delete(n)
+        console.log('外部连接已关闭')
+    })
 })
+
+setInterval(() => {
+    public_server.getConnections((err, count) => {
+        console.log(`${new Date().toLocaleString()} 连接数: ${count}`)
+    })
+}, 2000)
 
 public_server.listen(public_port, '0.0.0.0', () => {
     console.log(`公网服务已开启，端口:${public_port}`)
