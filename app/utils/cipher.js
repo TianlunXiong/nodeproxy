@@ -1,9 +1,4 @@
 
-let arr1 = new Array(256).fill(0)
-let arr2 = arr1.map((_, index) => {
-  return 255 - index
-})
-
 /**
  * @description 实例传入through2()中, encode加密
  */

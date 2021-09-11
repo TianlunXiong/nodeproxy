@@ -1,23 +1,17 @@
 {
-  "name": "tcp_http",
+  "name": "https_tunnel",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "tsc ./src/index.ts -p ./bin",
-    "local": "node ./bin/local",
-    "remote": "node ./bin/remote",
-    "start": "pm2 start ./bin/local.js"
+    "client": "pm2 start ./app/client.js",
+    "server": "pm2 start ./app/server.js"
   },
-  "author": "",
+  "author": "tainlx",
   "license": "ISC",
   "dependencies": {
-    "config": "^3.2.2",
     "duplexify": "^4.1.1",
     "http-headers": "^3.0.2",
     "pm2": "^4.5.6",
-    "superagent": "^6.1.0",
     "through2": "^3.0.1"
   }
 }
